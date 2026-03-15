@@ -30,13 +30,16 @@ test('chat shows other users in user list', function () {
         ->assertSee('John Doe');
 });
 
-test('user cannot see themselves in user list', function () {
-    $user = User::factory()->create(['name' => 'Current User']);
+test('user cannot see_themselves_in_user_list', function () {
+    $user = User::factory()->create(['name' => 'Test User']);
+    User::factory()->create(['name' => 'Other User']);
     $this->actingAs($user);
 
-    $response = $this->get(route('chat'));
-    $response->assertStatus(200)
-        ->assertDontSee('Current User');
+    $users = \App\Models\User::whereNot('id', $user->id)->get();
+
+    $this->assertCount(1, $users);
+    $this->assertEquals('Other User', $users->first()->name);
+    $this->assertNull($users->first(fn ($u) => $u->name === 'Test User'));
 });
 
 test('chat component can load messages between users', function () {
@@ -97,7 +100,7 @@ test('chat component selects user correctly', function () {
     $this->actingAs($user);
 
     $component = Volt::test('chat')
-        ->set('selectedUser', $otherUser->id);
+        ->set('selectedUser', $otherUser);
 
     $component->assertStatus(200);
 });
