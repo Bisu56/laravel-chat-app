@@ -1,10 +1,13 @@
 <?php
 
+namespace Tests\Unit;
+
 use App\Events\MessageSent;
 use App\Events\UserTyping;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
-uses(RefreshDatabase::class);
+class ChatEventTest extends TestCase
+{
 
 test('message sent event can be created', function () {
     $message = [
@@ -31,7 +34,7 @@ test('message sent event broadcasts on private channel', function () {
     $channels = $event->broadcastOn();
 
     expect($channels)->toHaveCount(1)
-        ->and($channels[0]->name)->toBe('chat.2');
+        ->and($channels[0]->name)->toBe('private-chat.2');
 });
 
 test('message sent event returns correct broadcast data', function () {
@@ -60,7 +63,7 @@ test('user typing event broadcasts on private channel', function () {
     $event = new UserTyping(1, 2);
     $channel = $event->broadcastOn();
 
-    expect($channel->name)->toBe('typing.1');
+    expect($channel->name)->toBe('private-typing.1');
 });
 
 test('message sent event implements should broadcast', function () {
@@ -81,3 +84,4 @@ test('user typing event implements should broadcast', function () {
 
     expect($event)->toBeInstanceOf(\Illuminate\Contracts\Broadcasting\ShouldBroadcast::class);
 });
+}

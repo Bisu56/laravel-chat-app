@@ -68,3 +68,4 @@ test('chat message has timestamps', function () {
     expect($message->created_at)->not->toBeNull()
         ->and($message->updated_at)->not->toBeNull();
 });
+}
