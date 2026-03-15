@@ -1,10 +1,15 @@
 <?php
 
+namespace Tests\Unit;
+
 use App\Models\ChatMessage;
 use App\Models\User;
+use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-uses(RefreshDatabase::class);
+class ChatMessageTest extends TestCase
+{
+    use RefreshDatabase;
 
 test('chat message belongs to sender', function () {
     $sender = User::factory()->create();
