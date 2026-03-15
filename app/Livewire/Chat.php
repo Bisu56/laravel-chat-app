@@ -132,28 +132,6 @@ class Chat extends Component
         }
     }
 
-    #[On('echo-private:chat.{loginID},App\\Events\\MessageSent')]
-    public function newChatMessageNotification($message)
-    {
-        if ($this->selectedUser && $message['sender_id'] == $this->selectedUser->id) {
-            $newMessage = ChatMessage::find($message['id']);
-            if ($newMessage) {
-                $this->messages->push($newMessage);
-                $this->dispatch('scroll-to-bottom');
-            }
-        }
-    }
-
-    #[On('echo-private:typing.{selectedUser}.id,App\\Events\\UserTyping')]
-    public function showTypingIndicator($event)
-    {
-        if ($this->selectedUser && $event['userId'] === $this->selectedUser->id) {
-            $this->isTyping = true;
-            $this->dispatch('scroll-to-bottom');
-            $this->dispatch('reset-typing-indicator', 3000);
-        }
-    }
-
     public function resetTypingIndicator()
     {
         $this->isTyping = false;
